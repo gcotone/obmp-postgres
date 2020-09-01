@@ -24,7 +24,7 @@ from time import time
 # ----------------------------------------------------------------
 # Functions
 # ----------------------------------------------------------------
-def load_export(db, server, api="export.json"):
+def load_export(db, server, api="api/export.json"):
     query_begin = 'INSERT INTO rpki_validator (prefix, prefix_len, prefix_len_max, origin_as) VALUES '
     query_end = ' ON CONFLICT (prefix,prefix_len_max,origin_as) DO UPDATE SET timestamp=now()'
 
@@ -32,7 +32,10 @@ def load_export(db, server, api="export.json"):
     data = []
 
     try:
-        json_response = json.load(urllib2.urlopen('http://' + server + '/' + api))
+        req = urllib2.Request('http://' + server + '/' + api)
+        req.add_header("Content-Type", "application/json")
+        req.add_header("Accept", "application/json")
+        json_response = json.load(urllib2.urlopen(req))
         data = json_response['roas'] # json
 
     except urllib2.URLError as err:
