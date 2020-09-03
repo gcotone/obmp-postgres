@@ -49,7 +49,7 @@ def load_export(db, server, api="api/export.json"):
         if count > 0:
             query += ','
 
-        asn, prefix_full, max_length = line['asn'][2:], line['prefix'], line['maxLength']
+        asn, prefix_full, max_length = line.get('asn'), line.get('prefix'), line.get('maxLength')
         prefix, prefix_len = prefix_full.split('/')[0], prefix_full.split('/')[1]
 
         query += "('%s'::inet, %d, %d, %d)" % (prefix_full, int(prefix_len), int(max_length), int(asn))
